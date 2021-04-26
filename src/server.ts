@@ -27,5 +27,5 @@ app.use('/api/auth', require('./routes/auth'));
 
 // Start app
 app.listen(PORT, () => {
-    console.log('Server started');
+    console.log('Server started on port ' + PORT);
 });
