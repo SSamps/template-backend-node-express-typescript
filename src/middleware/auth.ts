@@ -1,7 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import User, { IUser } from '../models/User';
-import { userInfo } from 'node:os';
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     // Get token from header

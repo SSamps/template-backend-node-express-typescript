@@ -14,7 +14,7 @@ interface authRequest extends Request {
 // @route GET api/auth
 // @desc Get a user's info using a token
 // @access Private
-router.get('/', auth, async (req: Request, res: Response) => {
+router.get('/', auth, async (req, res) => {
     try {
         return res.json((req as authRequest).user);
     } catch (err) {
