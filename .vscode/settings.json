@@ -1,8 +1,7 @@
 {
   "files.exclude": {
     "node_modules": true,
-    ".vscode": true,
-    "package-lock.json": true
+    ".vscode": true
   },
   "peacock.color": "#215732",
   "workbench.colorCustomizations": {
