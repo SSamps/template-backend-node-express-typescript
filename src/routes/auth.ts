@@ -16,6 +16,7 @@ interface authRequest extends Request {
 // @access Private
 router.get('/', auth, async (req, res) => {
     try {
+        console.log('GET api/auth hit');
         return res.json((req as authRequest).user);
     } catch (err) {
         console.error(err.message);
@@ -30,6 +31,7 @@ router.post(
     '/',
     [check('email', 'An email is required').not().isEmpty(), check('password', 'A password is required').exists()],
     async (req: Request, res: Response) => {
+        console.log('POST api/auth hit');
         const errors: Result<ValidationError> = validationResult(req);
 
         if (!errors.isEmpty()) {

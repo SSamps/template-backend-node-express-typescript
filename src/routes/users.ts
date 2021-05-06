@@ -17,6 +17,7 @@ router.post(
         check('password', 'Please provide a password with 8 or more characters').isLength({ min: 8 }),
     ],
     async (req: Request, res: Response) => {
+        console.log('POST api/users hit');
         const errors: Result<ValidationError> = validationResult(req);
 
         if (!errors.isEmpty()) {

@@ -4,10 +4,16 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "watch": "tsc -w",
-        "dev": "nodemon dist/server.js",
+        "dev": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
+        "devContainer": "concurrently \"tsc -w\" \"nodemon --exec npm run dockerDev\"",
         "build": "tsc -p .",
-        "start": "node dist/server.js"
+        "start": "node dist/server.js",
+        "dockerRemoveContainer": "docker rm listapp-backend -f",
+        "dockerRemoveImage": "docker image rm listapp-backend:latest",
+        "dockerBuildImage": "docker build -t listapp-backend:latest .",
+        "dockerBuildContainer": "docker run --name listapp-backend -d -p 5000:5000 listapp-backend:latest",
+        "dockerBuild": "npm run build && npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer",
+        "dockerDev": "npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer"
     },
     "repository": {
         "type": "git",
@@ -26,6 +32,7 @@
         "@types/jsonwebtoken": "^8.5.1",
         "@types/mongoose": "^5.10.5",
         "bcryptjs": "^2.4.3",
+        "concurrently": "^6.0.2",
         "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-validator": "^6.10.1",
