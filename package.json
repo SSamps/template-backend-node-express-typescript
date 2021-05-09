@@ -11,7 +11,7 @@
         "dockerRemoveContainer": "docker rm listapp-backend -f",
         "dockerRemoveImage": "docker image rm listapp-backend:latest -f",
         "dockerBuildImage": "docker build -t listapp-backend:latest -f docker/build/Dockerfile .",
-        "dockerBuildContainer": "docker run --name listapp-backend -d -p 5000:5000 --env-file .env --network test_network listapp-backend:latest",
+        "dockerBuildContainer": "docker run --name listapp-backend -d -p 5000:5000 -e PORT=5000 --env-file .env --network test_network listapp-backend:latest",
         "dockerBuild": "npm-run-all -s -c dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer",
         "export": "npm-run-all -s -c build dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer"
     },
@@ -34,7 +34,6 @@
         "@types/mongoose": "^5.10.5",
         "bcryptjs": "^2.4.3",
         "cors": "^2.8.5",
-        "dotenv": "^8.2.0",
         "express": "^4.17.1",
         "express-validator": "^6.10.1",
         "jsonwebtoken": "^8.5.1",

@@ -1,6 +1,8 @@
-// Import env vars defined in the .env file in the root directory
-import dotenv from 'dotenv';
-dotenv.config({ path: './.env' });
+// ------
+// IMPORTANT: if running locally (not in a container) you need to either install the package "dotenv", using it as below OR set the env vars described in the README on your local system. When running in a container the script "dockerBuildContainer" in package.json will set these env vars using the .env file without requiring the "dotenv" package.
+// import dotenv from 'dotenv';
+// dotenv.config({ path: './.env' });
+// ------
 
 // Other Imports
 import express, { Application, Request, Response, NextFunction } from 'express';
