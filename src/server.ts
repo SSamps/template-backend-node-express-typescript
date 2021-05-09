@@ -5,6 +5,7 @@ dotenv.config({ path: './.env' });
 // Other Imports
 import express, { Application, Request, Response, NextFunction } from 'express';
 import connectDB from './db';
+import cors from 'cors';
 
 // Express configuration
 const app: Application = express();
@@ -15,6 +16,7 @@ connectDB(process.env.MONGO_URI);
 
 // // Init middleware
 app.use(express.json());
+app.use(cors());
 
 // Basic route
 app.get('/', (req: Request, res: Response) => {
