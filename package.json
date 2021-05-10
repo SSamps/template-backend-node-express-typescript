@@ -4,7 +4,7 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "dev": "concurrently \"tsc -w\" \"nodemon -e '*' -w '*' -w ./.env -i src/ -i .vscode/ -V --exec npm run dockerBuild\"",
+        "dev": "concurrently \"tsc -w\" \"nodemon -e '*' -w '*' -w ./.env -i src/ -i .vscode/ --exec npm run dockerBuild\"",
         "devLocal": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
         "build": "tsc -p .",
         "start": "node dist/server.js",
