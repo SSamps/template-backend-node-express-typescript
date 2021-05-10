@@ -4,7 +4,7 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "dev": "concurrently \"tsc -w\" \"nodemon --exec npm run dockerBuild\"",
+        "dev": "concurrently \"tsc -w\" \"nodemon -e '*' -w '*' -w ./.env -i src/ -i .vscode/ -V --exec npm run dockerBuild\"",
         "devLocal": "concurrently \"tsc -w\" \"nodemon dist/server.js\"",
         "build": "tsc -p .",
         "start": "node dist/server.js",
@@ -12,8 +12,8 @@
         "dockerRemoveImage": "docker image rm listapp-backend:latest -f",
         "dockerBuildImage": "docker build -t listapp-backend:latest -f docker/build/Dockerfile .",
         "dockerBuildContainer": "docker run --name listapp-backend -d -p 5000:5000 -e PORT=5000 --env-file .env --network test_network listapp-backend:latest",
-        "dockerBuild": "npm-run-all -s -c dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer",
-        "export": "npm-run-all -s -c build dockerRemoveContainer dockerRemoveImage dockerBuildImage dockerBuildContainer"
+        "dockerBuild": "npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer",
+        "export": "npm run build && npm run dockerRemoveContainer && npm run dockerRemoveImage && npm run dockerBuildImage && npm run dockerBuildContainer"
     },
     "repository": {
         "type": "git",
