@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from 'express';
 import auth from '../middleware/auth';
-import User, { IUser } from '../models/User';
+import User, { IcensoredUser, IUser } from '../models/User';
 import { check, validationResult, Result, ValidationError } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -42,26 +42,34 @@ router.post(
 
         try {
             // See if user exists in the database
-            let user = await User.findOne({ email });
-            if (!user) {
+            let foundUser = await User.findOne({ email });
+            if (!foundUser) {
                 return res.status(400).json({ errors: [{ msg: 'Your email or password is incorrect.' }] });
             }
 
             // Check if the password is correct
-            const isMatch = await bcrypt.compare(password, user.password);
+            const isMatch = await bcrypt.compare(password, foundUser.password);
             if (!isMatch) {
                 return res.status(400).json({ errors: [{ msg: 'Your email or password is incorrect.' }] });
             }
 
-            // Return a jwt
+            // Return a jwt and a cut down user
             const payload = {
                 user: {
-                    id: user.id,
+                    id: foundUser.id,
                 },
             };
+
+            var user: IcensoredUser = {
+                _id: foundUser._id,
+                displayName: foundUser.displayName,
+                email: foundUser.email,
+                registrationDate: foundUser.registrationDate,
+            };
+
             jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 36000 }, (err, token) => {
                 if (err) throw err;
-                return res.json({ token });
+                return res.json({ token, user });
             });
         } catch (err) {
             console.error(err.message);

@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import User, { IUser } from '../models/User';
+import User, { IcensoredUser, IUser } from '../models/User';
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     // Get token from header
@@ -12,7 +12,7 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     }
 
     interface authRequest extends Request {
-        user: IUser;
+        user: IcensoredUser;
     }
 
     interface IToken {
@@ -29,17 +29,17 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
 
         // Check whether the token was issued before oldestValidJWT was last set. This could be used to invalidate user tokens if required. Also protects against tokens being used after user deletion.
         try {
-            var user = await User.findById(decoded.user.id).select('-password');
+            var foundUser = await User.findById(decoded.user.id).select('-password');
         } catch (err) {
             return res.status(500).json({ msg: 'Server Error' });
         }
 
-        if (!user) {
+        if (!foundUser) {
             console.error('Token decoded for user ' + decoded.user.id + ' but found no oldestValidJWT');
             return res.status(404).json({ msg: 'User not found' });
         }
 
-        const oldestValidJWT = user.oldestValidJWT;
+        const oldestValidJWT = foundUser.oldestValidJWT;
         // Add one second to iat as it is rounded down to the nearest second when set while oldestValidJWT was not
         const tokenDate = new Date((decoded.iat + 1) * 1000);
 
@@ -47,7 +47,13 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
-        user.oldestValidJWT = undefined;
+        var user: IcensoredUser = {
+            _id: foundUser._id,
+            displayName: foundUser.displayName,
+            email: foundUser.email,
+            registrationDate: foundUser.registrationDate,
+        };
+
         (req as authRequest).user = user;
         next();
     } catch (err) {

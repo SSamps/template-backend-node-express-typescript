@@ -1,5 +1,12 @@
 import { Document, Schema, model } from 'mongoose';
 
+export interface IcensoredUser {
+    displayName?: string;
+    email?: string;
+    registrationDate?: Date;
+    _id?: string;
+}
+
 export interface IUser extends Document {
     displayName: string;
     email: string;
