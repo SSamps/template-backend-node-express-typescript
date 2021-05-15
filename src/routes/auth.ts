@@ -25,7 +25,7 @@ router.get('/', auth, async (req, res) => {
 });
 
 // @route POST api/auth
-// @desc Authenticate user & get token
+// @desc Authenticate user, get token and basic user info
 // @access Public
 router.post(
     '/',
@@ -61,7 +61,7 @@ router.post(
             };
 
             var user: IcensoredUser = {
-                _id: foundUser._id,
+                _id: foundUser.id,
                 displayName: foundUser.displayName,
                 email: foundUser.email,
                 registrationDate: foundUser.registrationDate,
