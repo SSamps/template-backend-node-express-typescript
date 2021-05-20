@@ -31,7 +31,7 @@ router.post(
 
             let foundUser = await User.findOne({ email });
             if (foundUser) {
-                return res.status(400).json({ errors: [{ msg: 'A user already exists with that email address' }] });
+                return res.status(400).json({ errors: [{ msg: 'An account already exists with that email address' }] });
             }
 
             // Encrypt the password
