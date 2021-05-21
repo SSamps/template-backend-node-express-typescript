@@ -5,8 +5,7 @@
     "README.md": true,
     "package-lock.json": true,
     ".vscode": true,
-    "dist": true,
-    "node_modules": true
+    "dist": true
   },
   "peacock.color": "#215732",
   "workbench.colorCustomizations": {
