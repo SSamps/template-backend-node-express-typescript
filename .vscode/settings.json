@@ -4,8 +4,8 @@
     "tsconfig.json": true,
     "README.md": true,
     "package-lock.json": true,
-    ".vscode": true,
-    "dist": true
+    "dist": true,
+    ".vscode": true
   },
   "peacock.color": "#215732",
   "workbench.colorCustomizations": {
