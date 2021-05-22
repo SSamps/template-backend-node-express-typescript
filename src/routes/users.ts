@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from 'express';
 import { check, validationResult, Result, ValidationError } from 'express-validator';
-import User, { IUser } from '../models/User';
+import User, { IcensoredUser, IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -17,6 +17,7 @@ router.post(
         check('password', 'Please provide a password with 8 or more characters').isLength({ min: 8 }),
     ],
     async (req: Request, res: Response) => {
+        console.log('POST api/users hit');
         const errors: Result<ValidationError> = validationResult(req);
 
         if (!errors.isEmpty()) {
@@ -28,9 +29,9 @@ router.post(
         try {
             // See if user already exists in the database
 
-            let user = await User.findOne({ email });
-            if (user) {
-                return res.status(400).json({ errors: [{ msg: 'A user already exists with that email address' }] });
+            let foundUser = await User.findOne({ email });
+            if (foundUser) {
+                return res.status(400).json({ errors: [{ msg: 'An account already exists with that email address' }] });
             }
 
             // Encrypt the password
@@ -57,9 +58,16 @@ router.post(
                 },
             };
 
+            var user: IcensoredUser = {
+                _id: newUser.id,
+                displayName: displayName,
+                email: email,
+                registrationDate: newUser.registrationDate,
+            };
+
             jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 36000 }, (err, token) => {
                 if (err) throw err;
-                return res.json({ token });
+                return res.json({ token, user });
             });
         } catch (err) {
             console.error(err.message);
