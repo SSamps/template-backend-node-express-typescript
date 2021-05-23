@@ -1,15 +1,11 @@
 import express, { Router, Request, Response } from 'express';
 import auth from '../middleware/auth';
-import User, { IcensoredUser, IUser } from '../models/User';
+import User, { IUserCensoredProps, IUserProps } from '../models/User';
 import { check, validationResult, Result, ValidationError } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 const router: Router = express.Router();
-
-interface authRequest extends Request {
-    user: IUser;
-}
 
 // @route GET api/auth
 // @desc Get a user's info using a token
@@ -17,7 +13,7 @@ interface authRequest extends Request {
 router.get('/', auth, async (req, res) => {
     try {
         console.log('GET api/auth hit');
-        return res.json((req as authRequest).user);
+        return res.json(req.user);
     } catch (err) {
         console.error(err.message);
         return res.status(500).send('Server error');
@@ -38,7 +34,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        let { email, password }: IUser = req.body;
+        let { email, password }: IUserProps = req.body;
 
         try {
             // See if user exists in the database
@@ -60,7 +56,7 @@ router.post(
                 },
             };
 
-            var user: IcensoredUser = {
+            var user: IUserCensoredProps = {
                 _id: foundUser.id,
                 displayName: foundUser.displayName,
                 email: foundUser.email,

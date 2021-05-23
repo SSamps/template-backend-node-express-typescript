@@ -1,6 +1,14 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import User, { IcensoredUser, IUser } from '../models/User';
+import User, { IUserCensoredProps } from '../models/User';
+
+interface IToken {
+    alg: string;
+    typ: string;
+    user: { id: string };
+    iat: number;
+    exp: number;
+}
 
 async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     // Get token from header
@@ -9,18 +17,6 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
     // Check if not token
     if (!token) {
         return res.status(401).json({ msg: 'Unauthorized' });
-    }
-
-    interface authRequest extends Request {
-        user: IcensoredUser;
-    }
-
-    interface IToken {
-        alg: string;
-        typ: string;
-        user: { id: string };
-        iat: number;
-        exp: number;
     }
 
     // Verify token
@@ -47,14 +43,14 @@ async function authMiddleware(req: Request, res: Response, next: NextFunction) {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
-        var user: IcensoredUser = {
+        var user: IUserCensoredProps = {
             _id: foundUser._id,
             displayName: foundUser.displayName,
             email: foundUser.email,
             registrationDate: foundUser.registrationDate,
         };
 
-        (req as authRequest).user = user;
+        req.user = user;
         next();
     } catch (err) {
         console.error(err.message);

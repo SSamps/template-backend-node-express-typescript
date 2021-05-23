@@ -1,14 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import auth from '../middleware/auth';
-import { IUser } from '../models/User';
 import { check, Result, ValidationError, validationResult } from 'express-validator';
 import Test, { ItestData } from '../models/Test';
 
 const router: Router = express.Router();
-
-interface authRequest extends Request {
-    user: IUser;
-}
 
 // @route GET api/test
 // @desc Get a user's test data
@@ -16,8 +11,7 @@ interface authRequest extends Request {
 router.get('/', auth, async (req: Request, res: Response) => {
     try {
         console.log('GET api/test hit');
-        // TODO fix this as authRequest
-        const test = await Test.findOne({ user: (req as authRequest).user._id });
+        const test = await Test.findOne({ user: req.user?._id });
         if (!test) {
             return res.status(404).json({ msg: 'Test data not found' });
         }
@@ -39,7 +33,7 @@ router.post('/', auth, check('testVar', 'testVar is required').not().isEmpty(), 
     }
 
     const { testVar } = req.body;
-    const id = (req as authRequest).user._id;
+    const id = req.user?._id;
     const testData = { testVar };
 
     try {
