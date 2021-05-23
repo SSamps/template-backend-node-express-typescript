@@ -22,7 +22,7 @@ router.get('/:userid', auth, async (req: Request, res: Response) => {
         if (!testRecord) {
             return res.status(404).json({ msg: 'Test data not found' });
         }
-        return res.json(testRecord);
+        return res.json(testRecord.testData);
     } catch (err) {
         console.error(err.message);
         return res.status(500).send('Server error');
