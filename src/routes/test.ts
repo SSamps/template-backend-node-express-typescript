@@ -64,7 +64,8 @@ router.post(
             } else {
                 const updatedTestDataRecord = await Test.findOneAndUpdate(
                     { user: userIdParams },
-                    { $push: { testData: testData } }
+                    { $push: { testData: testData } },
+                    { new: true }
                 );
                 return res.status(200).json(updatedTestDataRecord?.testData);
             }
@@ -92,7 +93,6 @@ router.delete('/:userid/:testid', auth, async (req: Request, res: Response) => {
     try {
         const foundTestRecord = await Test.findOne({ user: userIdParams, 'testData._id': testDataId });
         if (foundTestRecord) {
-            console.log(foundTestRecord);
             await Test.findOneAndUpdate({ user: userIdParams }, { $pull: { testData: { _id: testDataId } } });
             return res.status(200).json({ msg: 'Test data removed' });
         } else {
