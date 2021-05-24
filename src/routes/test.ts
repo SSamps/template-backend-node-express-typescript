@@ -9,6 +9,8 @@ const router: Router = express.Router();
 // @desc Get a user's test data
 // @access Private
 router.get('/:userid', auth, async (req: Request, res: Response) => {
+    console.log('GET api/test hit');
+
     const userIdParams = req.params.userid;
     const userIdToken = req.user?._id;
 
@@ -17,7 +19,6 @@ router.get('/:userid', auth, async (req: Request, res: Response) => {
     }
 
     try {
-        console.log('GET api/test hit');
         const testRecord = await Test.findOne({ user: userIdParams });
         if (!testRecord) {
             return res.status(404).json({ msg: 'Test data not found' });
@@ -59,10 +60,13 @@ router.post(
             if (!foundTestData) {
                 const newTestDataRecord: ItestData = new Test({ user: userIdParams, testData: [testData] });
                 await newTestDataRecord.save();
-                return res.status(200).json({ msg: 'Test data added' });
+                return res.status(200).json(newTestDataRecord.testData);
             } else {
-                await Test.findOneAndUpdate({ user: userIdParams }, { $push: { testData: testData } });
-                return res.status(200).json({ msg: 'Test data added' });
+                const updatedTestDataRecord = await Test.findOneAndUpdate(
+                    { user: userIdParams },
+                    { $push: { testData: testData } }
+                );
+                return res.status(200).json(updatedTestDataRecord?.testData);
             }
         } catch (err) {
             console.log(err.message);
