@@ -5,7 +5,7 @@ import Test, { ItestData } from '../models/Test';
 
 const router: Router = express.Router();
 
-// @route GET api/test
+// @route GET api/test/:userid
 // @desc Get a user's test data
 // @access Private
 router.get('/:userid', auth, async (req: Request, res: Response) => {
@@ -30,7 +30,7 @@ router.get('/:userid', auth, async (req: Request, res: Response) => {
     }
 });
 
-// @route POST api/test
+// @route POST api/test/:userid
 // @desc Add some test data to a user
 // @access Private
 router.post(
