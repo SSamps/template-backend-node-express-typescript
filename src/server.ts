@@ -5,7 +5,7 @@
 // ------
 
 // Other Imports
-import express, { Application, Request, Response, NextFunction } from 'express';
+import express, { Application } from 'express';
 import connectDB from './db';
 import cors from 'cors';
 
@@ -20,14 +20,10 @@ connectDB(process.env.MONGO_URI);
 app.use(express.json());
 app.use(cors());
 
-// Basic route
-app.get('/', (req: Request, res: Response) => {
-    res.send('hello');
-});
-
 // Define Routes
 app.use('/api/users', require('./routes/users'));
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/test', require('./routes/test'));
 
 // Start app
 app.listen(PORT, () => {

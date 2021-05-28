@@ -1,6 +1,6 @@
 import express, { Router, Request, Response } from 'express';
 import { check, validationResult, Result, ValidationError } from 'express-validator';
-import User, { IcensoredUser, IUser } from '../models/User';
+import User, { IUserCensoredProps, IUser, IUserProps } from '../models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -24,7 +24,7 @@ router.post(
             return res.status(400).json({ errors: errors.array() });
         }
 
-        let { displayName, email, password }: IUser = req.body;
+        let { displayName, email, password }: IUserProps = req.body;
 
         try {
             // See if user already exists in the database
@@ -58,7 +58,7 @@ router.post(
                 },
             };
 
-            var user: IcensoredUser = {
+            var user: IUserCensoredProps = {
                 _id: newUser.id,
                 displayName: displayName,
                 email: email,

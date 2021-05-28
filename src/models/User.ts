@@ -1,10 +1,19 @@
 import { Document, Schema, model } from 'mongoose';
 
-export interface IcensoredUser {
+export interface IUserCensoredProps {
     displayName?: string;
     email?: string;
     registrationDate?: Date;
     _id?: string;
+}
+
+export interface IUserProps {
+    displayName: string;
+    email: string;
+    password: string;
+    registrationDate: Date;
+    oldestValidJWT?: Date;
+    _id: string;
 }
 
 export interface IUser extends Document {
